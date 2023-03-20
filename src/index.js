@@ -3,8 +3,6 @@ import './css/styles.css';
 import Notiflix from 'notiflix';
 import debounce from 'lodash.debounce';
 import API from './js/fetchCountries';
-// import Handlebars from 'handlebars'; // npm install handlebars used
-// import countryCardTmpl from './templates/country-card.hbs';
 //========
 const DEBOUNCE_DELAY = 300;
 
