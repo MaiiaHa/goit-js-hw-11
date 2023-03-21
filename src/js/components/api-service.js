@@ -1,3 +1,12 @@
+const API_KEY = '34588497-3719c03793052fb5df7f8aa6e';
+const BASE_URL = 'https://pixabay.com/api/';
+
+const options = {
+  image_type: 'photo',
+  orientation: 'horizontal',
+  safesearch: true,
+  per_page: 5,
+};
 export default class ApiService {
   constructor() {
     this.searchInput = '';
@@ -6,18 +15,9 @@ export default class ApiService {
 
   fetchInput() {
     console.log(this);
-    const options = {
-      key: '34588497-3719c03793052fb5df7f8aa6e',
-      q: this.searchInput,
-      image_type: 'photo',
-      orientation: 'horizontal',
-      safesearch: true,
-      per_page: 5,
-    };
-    const BASE_URL = 'https://pixabay.com/api/';
 
     return fetch(
-      `${BASE_URL}?key=${options.key}&q=${this.searchInput}&image_type=${options.image_type}&orientation=${options.orientation}&page=${this.page}&per_page=${options.per_page}`
+      `${BASE_URL}?key=${API_KEY}&q=${this.searchInput}&image_type=${options.image_type}&orientation=${options.orientation}&page=${this.page}&per_page=${options.per_page}`
     )
       .then(responce => {
         // if (!responce.ok) {
@@ -26,9 +26,9 @@ export default class ApiService {
         return responce.json();
         // console.log(responce.json());
       })
-      .then(data => {
+      .then(({ hits }) => {
         this.incrementPage();
-        return data.hits;
+        return hits;
       })
       .catch(error => {
         Notiflix.Notify.failure(
@@ -53,7 +53,3 @@ export default class ApiService {
     this.searchInput = NewInput;
   }
 }
-// if (!searchInput) {
-//   // deleteSearchInput();
-//   return;
-// }
