@@ -3,7 +3,6 @@ import './css/styles.css';
 import Notiflix from 'notiflix'; // all modules
 import SimpleLightbox from 'simplelightbox'; // Описаний в документації
 import 'simplelightbox/dist/simple-lightbox.min.css'; // Додатковий імпорт стилів
-import axios from 'axios';
 import InputApiService from './js/components/api-service';
 //========
 
