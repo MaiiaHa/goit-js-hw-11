@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from 'axios'; //, { Axios }
 import Notiflix from 'notiflix';
 
 const API_KEY = '34588497-3719c03793052fb5df7f8aa6e';
@@ -21,14 +21,14 @@ export default class ApiService {
   fetchInput() {
     console.log(this);
 
+    // works:
     return fetch(
       `${BASE_URL}?key=${API_KEY}&q=${this.searchInput}&image_type=${options.image_type}&orientation=${options.orientation}&page=${this.page}&per_page=${options.per_page}`
     )
       .then(responce => {
-        if (!responce.ok) {
-          throw new Error(responce.status);
-        }
-        console.log(responce.json());
+        // if (!responce.ok) {
+        //   throw new Error(responce.status);
+        // }
         return responce.json();
       })
       .then(({ hits }) => {

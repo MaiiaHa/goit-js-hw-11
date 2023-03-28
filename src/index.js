@@ -18,6 +18,8 @@ const inputApiService = new InputApiService();
 refs.form.addEventListener('submit', onSubmitForm);
 refs.btnLoadMore.addEventListener('click', onLoadMorePictures);
 
+refs.btnLoadMore.style.display = 'none';
+
 function onSubmitForm(e) {
   e.preventDefault();
 
@@ -31,6 +33,8 @@ function onSubmitForm(e) {
     ); // when input will be zero
     return;
   }
+
+  refs.btnLoadMore.style.display = '';
 
   inputApiService.resetPage();
   inputApiService.fetchInput().then(hits => {
