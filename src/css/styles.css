@@ -29,17 +29,21 @@ body {
 #search-form {
   padding: 10px;
   background-color: blanchedalmond;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 
   display: flex;
   justify-content: center;
 }
 #search-form input {
   font-size: 20px;
+  border: 2px solid 4px rgb(165, 146, 118);
+  outline-color: rgb(165, 146, 118);
 }
 button[type='submit'] {
   background-color: rgb(252, 224, 185);
   border-color: rgb(165, 146, 118);
   border-radius: 4px;
+  border-style: solid;
 }
 .info {
   display: flex;
@@ -56,6 +60,13 @@ button[type='submit'] {
 .photo-card {
   background-color: rgb(252, 224, 185);
   width: calc((100% - 30px) / 4);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  outline: 0.5px solid rgb(165, 146, 118);
+}
+.photo-card:hover,
+.photo-card:focus {
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+  background-color: rgb(246, 215, 173);
 }
 .photo-card img {
   width: 100%;
