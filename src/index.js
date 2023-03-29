@@ -243,15 +243,15 @@ function deleteCardContainer() {
 //Прокручування сторінки
 //Зробити плавне прокручування сторінки після запиту і відтворення кожної наступної групи зображень. Ось тобі код-підказка, але розберися у ньому самостійно.
 
-function lightScroll() {
-  const { height: cardHeight } =
-    refs.gallery.firstElementChild.getBoundingClientRect();
+// function lightScroll() {
+//   const { height: cardHeight } =
+//     refs.gallery.firstElementChild.getBoundingClientRect();
 
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-}
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// }
 
 // плавний скрол
 window.addEventListener('scroll', () => {
