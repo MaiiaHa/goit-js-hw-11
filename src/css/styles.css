@@ -20,6 +20,11 @@ body {
 } */
 
 /* added styles ------- basic ---------*/
+#sentinel {
+  width: 10px;
+  height: 10px;
+  background-color: tomato;
+}
 
 #search-form {
   padding: 10px;
