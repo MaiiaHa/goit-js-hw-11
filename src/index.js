@@ -95,7 +95,8 @@ import API from './js/components/api-service';
 const refs = {
   form: document.querySelector('#search-form'),
   gallery: document.querySelector('.gallery'),
-  btnLoadMore: document.querySelector('.load-more'),
+  sentinel: document.querySelector('#sentinel'),
+  // btnLoadMore: document.querySelector('.load-more'),
 };
 
 const lightbox = new SimpleLightbox('.gallery a', {
@@ -105,19 +106,20 @@ const lightbox = new SimpleLightbox('.gallery a', {
 });
 
 refs.form.addEventListener('submit', onSubmitForm);
-refs.btnLoadMore.addEventListener('click', onLoadMorePictures);
+// refs.btnLoadMore.addEventListener('click', onLoadMorePictures);
 
 const itemPerPage = 40;
 let currentPage = null;
+let searchInput = '';
 
-refs.btnLoadMore.style.display = 'none';
+// refs.btnLoadMore.style.display = 'none';
 
 async function onSubmitForm(e) {
   e.preventDefault();
   deleteCardContainer();
 
   currentPage = 1;
-  refs.btnLoadMore.style.display = 'none';
+  // refs.btnLoadMore.style.display = 'none';
 
   const searchInput = e.currentTarget.elements.searchQuery.value
     .split(' ')
@@ -138,8 +140,8 @@ async function onSubmitForm(e) {
     );
     const totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
-    console.log(cardsData); //massive of objects [{},{},{}]
-    console.log('~ totalHits:', totalHits);
+    // console.log(cardsData); //massive of objects [{},{},{}]
+    // console.log('~ totalHits:', totalHits);
 
     if (totalHits === 0) {
       return Notiflix.Notify.failure(
@@ -156,7 +158,7 @@ async function onSubmitForm(e) {
     // refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
 
     createGalleryCard(cardsData);
-    refs.btnLoadMore.style.display = '';
+    // refs.btnLoadMore.style.display = '';
 
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
@@ -179,7 +181,7 @@ async function onLoadMorePictures() {
     );
     const totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
-    console.log(cardsData); //massive of objects [{},{},{}]
+    // console.log(cardsData); //massive of objects [{},{},{}]
     // console.log(searchInput);
 
     createGalleryCard(cardsData);
@@ -242,26 +244,41 @@ function deleteCardContainer() {
 }
 //Прокручування сторінки
 //Зробити плавне прокручування сторінки після запиту і відтворення кожної наступної групи зображень. Ось тобі код-підказка, але розберися у ньому самостійно.
+// https://www.youtube.com/watch?v=B0vwmjOznEI&t=510s
+function lightScroll() {
+  const { height: cardHeight } =
+    refs.gallery.firstElementChild.getBoundingClientRect();
 
-// function lightScroll() {
-//   const { height: cardHeight } =
-//     refs.gallery.firstElementChild.getBoundingClientRect();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}
 
-//   window.scrollBy({
-//     top: cardHeight * 2,
-//     behavior: 'smooth',
-//   });
-// }
+const onEntry = (entries, io) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting && searchInput !== '') {
+      console.log('пора грузить ФОТКИ');
+      onLoadMorePictures();
+    }
+  });
+};
+const options = {
+  rootMargin: '400px',
+  // threshold: 0,
+};
+const observer = new IntersectionObserver(onEntry, options);
+observer.observe(refs.sentinel);
 
 // плавний скрол
-window.addEventListener('scroll', () => {
-  const documentRect = document.documentElement.getBoundingClientRect();
-  // console.log('top', documentRect.top);
-  // console.log('bottom', documentRect.bottom);
-  if (documentRect.bottom < document.documentElement.clientHeight + 1) {
-    // console.log('done');
-    // currentPage += 1;
-    refs.btnLoadMore.style.display = 'none';
-    onLoadMorePictures();
-  }
-});
+// window.addEventListener('scroll', () => {
+//   const documentRect = document.documentElement.getBoundingClientRect();
+//   // console.log('top', documentRect.top);
+//   // console.log('bottom', documentRect.bottom);
+//   if (documentRect.bottom < document.documentElement.clientHeight + 1) {
+//     // console.log('done');
+//     // currentPage += 1;
+//     refs.btnLoadMore.style.display = 'none';
+//     onLoadMorePictures();
+//   }
+// });
