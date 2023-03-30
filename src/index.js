@@ -116,7 +116,7 @@ let searchInput = '';
 async function onSubmitForm(e) {
   e.preventDefault();
   deleteCardContainer();
-  refs.sentinel.style.display = 'none';
+  refs.sentinel.style.display = 'none'; // перешкоджає повторному запиту на АРІ
 
   currentPage = 1;
   // refs.btnLoadMore.style.display = 'none';
@@ -159,7 +159,7 @@ async function onSubmitForm(e) {
 
     createGalleryCard(cardsData);
     // refs.btnLoadMore.style.display = '';
-    refs.sentinel.style.display = 'block';
+    refs.sentinel.style.display = 'block'; // перешкоджає повторному запиту на АРІ
     observer.observe(refs.sentinel);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
