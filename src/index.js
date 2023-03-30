@@ -83,14 +83,13 @@
 // ========================= work 1var ===========================
 
 import './css/styles.css';
-//========
 import Notiflix from 'notiflix'; // all modules
 // Описаний в документації
 import SimpleLightbox from 'simplelightbox';
 // Додатковий імпорт стилів
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import API from './js/components/api-service';
-//========
+//=======================================
 
 const refs = {
   form: document.querySelector('#search-form'),
@@ -98,7 +97,7 @@ const refs = {
   sentinel: document.querySelector('#sentinel'),
   // btnLoadMore: document.querySelector('.load-more'),
 };
-
+//=======================================
 const lightbox = new SimpleLightbox('.gallery a', {
   animationSlide: false,
   captionsData: 'alt',
@@ -242,7 +241,7 @@ async function createGalleryCard(hits) {
 function deleteCardContainer() {
   refs.gallery.innerHTML = '';
 }
-//Прокручування сторінки
+//===============Прокручування сторінки==================
 //Зробити плавне прокручування сторінки після запиту і відтворення кожної наступної групи зображень. Ось тобі код-підказка, але розберися у ньому самостійно.
 // https://www.youtube.com/watch?v=B0vwmjOznEI&t=510s
 function lightScroll() {
@@ -254,7 +253,7 @@ function lightScroll() {
     behavior: 'smooth',
   });
 }
-
+//============= intersection observer ================
 const onEntry = (entries, io) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -268,3 +267,34 @@ const options = {
   threshold: 0,
 };
 const observer = new IntersectionObserver(onEntry, options);
+
+//======================= btn up =======================
+const string = '<div id="triangle" class="btn-up btn-up_hide"></div>';
+
+refs.gallery.insertAdjacentHTML('afterend', string);
+console.log(string);
+
+const btnUp = {
+  el: document.querySelector('.btn-up'),
+  show() {
+    this.el.classList.remove('btn-up_hide');
+  },
+  hide() {
+    this.el.classList.add('btn-up_hide');
+  },
+  addEventListener() {
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      scrollY > 400 ? this.show() : this.hide();
+    });
+    document.querySelector('.btn-up').onclick = () => {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+    };
+  },
+};
+
+btnUp.addEventListener();
