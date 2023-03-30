@@ -116,6 +116,7 @@ let searchInput = '';
 async function onSubmitForm(e) {
   e.preventDefault();
   deleteCardContainer();
+  refs.sentinel.style.display = 'none';
 
   currentPage = 1;
   // refs.btnLoadMore.style.display = 'none';
@@ -158,6 +159,7 @@ async function onSubmitForm(e) {
 
     createGalleryCard(cardsData);
     // refs.btnLoadMore.style.display = '';
+    refs.sentinel.style.display = 'block';
     observer.observe(refs.sentinel);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
@@ -272,7 +274,6 @@ const observer = new IntersectionObserver(onEntry, options);
 const string = '<div id="triangle" class="btn-up btn-up_hide"></div>';
 
 refs.gallery.insertAdjacentHTML('afterend', string);
-console.log(string);
 
 const btnUp = {
   el: document.querySelector('.btn-up'),
