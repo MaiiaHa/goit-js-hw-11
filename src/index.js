@@ -150,7 +150,7 @@ async function onSubmitForm(e) {
     } else if (totalHits <= itemPerPage) {
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
       refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
-      refs.btnLoadMore.style.display = 'none';
+      // refs.btnLoadMore.style.display = 'none';
     } else {
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
     }
@@ -159,7 +159,7 @@ async function onSubmitForm(e) {
 
     createGalleryCard(cardsData);
     // refs.btnLoadMore.style.display = '';
-
+    observer.observe(refs.sentinel);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
     Notiflix.Notify.failure(
@@ -182,10 +182,10 @@ async function onLoadMorePictures() {
     const totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
     // console.log(cardsData); //massive of objects [{},{},{}]
-    // console.log(searchInput);
 
     createGalleryCard(cardsData);
-    refs.btnLoadMore.style.display = '';
+    observer.observe(refs.sentinel);
+    // refs.btnLoadMore.style.display = '';
 
     if (Math.ceil(totalHits / itemPerPage) < currentPage) {
       return Notiflix.Notify.info(
@@ -257,28 +257,14 @@ function lightScroll() {
 
 const onEntry = (entries, io) => {
   entries.forEach(entry => {
-    if (entry.isIntersecting && searchInput !== '') {
-      console.log('пора грузить ФОТКИ');
+    if (entry.isIntersecting) {
+      // console.log('пора грузить ФОТКИ');
       onLoadMorePictures();
     }
   });
 };
 const options = {
-  rootMargin: '400px',
-  // threshold: 0,
+  rootMargin: '500px',
+  threshold: 0,
 };
 const observer = new IntersectionObserver(onEntry, options);
-observer.observe(refs.sentinel);
-
-// плавний скрол
-// window.addEventListener('scroll', () => {
-//   const documentRect = document.documentElement.getBoundingClientRect();
-//   // console.log('top', documentRect.top);
-//   // console.log('bottom', documentRect.bottom);
-//   if (documentRect.bottom < document.documentElement.clientHeight + 1) {
-//     // console.log('done');
-//     // currentPage += 1;
-//     refs.btnLoadMore.style.display = 'none';
-//     onLoadMorePictures();
-//   }
-// });
