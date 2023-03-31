@@ -109,6 +109,7 @@ refs.form.addEventListener('submit', onSubmitForm);
 
 const itemPerPage = 40;
 let currentPage = null;
+// let totalHits = null;
 let searchInput = '';
 
 // refs.btnLoadMore.style.display = 'none';
@@ -122,11 +123,12 @@ async function onSubmitForm(e) {
   // refs.btnLoadMore.style.display = 'none';
 
   const searchInput = e.currentTarget.elements.searchQuery.value
+    .trim()
     .split(' ')
     .join('+'); // string 'word+word' format
   // console.log(searchInput); // введені дані користувачем
 
-  if (!searchInput) {
+  if (searchInput === '') {
     return Notiflix.Notify.info(
       'There are too much images matching your search query. Please try again.'
     ); // when input will be zero
@@ -147,12 +149,20 @@ async function onSubmitForm(e) {
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-    } else if (totalHits <= itemPerPage) {
+    }
+    // else if (totalHits < itemPerPage) {
+    //   Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
+    //   refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
+    //   // refs.btnLoadMore.style.display = 'none';
+    // }
+    else {
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
-      refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
-      // refs.btnLoadMore.style.display = 'none';
-    } else {
-      Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
+    }
+
+    if (cardsData.length === 0) {
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
     }
 
     // refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
@@ -163,9 +173,7 @@ async function onSubmitForm(e) {
     observer.observe(refs.sentinel);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
-    Notiflix.Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
-    );
+    Notiflix.Notify.failure('Sorry, somethig was wrong. Please try again.');
     console.error(error);
   }
 }
@@ -185,14 +193,15 @@ async function onLoadMorePictures() {
     // console.log(cardsData); //massive of objects [{},{},{}]
 
     createGalleryCard(cardsData);
-    observer.observe(refs.sentinel);
-    // refs.btnLoadMore.style.display = '';
 
+    // refs.btnLoadMore.style.display = '';
     if (Math.ceil(totalHits / itemPerPage) < currentPage) {
-      return Notiflix.Notify.info(
+      Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
       );
+      return;
     }
+    observer.observe(refs.sentinel);
 
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
@@ -246,16 +255,16 @@ function deleteCardContainer() {
 //===============Прокручування сторінки==================
 //Зробити плавне прокручування сторінки після запиту і відтворення кожної наступної групи зображень. Ось тобі код-підказка, але розберися у ньому самостійно.
 // https://www.youtube.com/watch?v=B0vwmjOznEI&t=510s
-function lightScroll() {
-  const { height: cardHeight } =
-    refs.gallery.firstElementChild.getBoundingClientRect();
+// function lightScroll() {
+//   const { height: cardHeight } =
+//     refs.gallery.firstElementChild.getBoundingClientRect();
 
-  window.scrollBy({
-    top: cardHeight * 2,
-    behavior: 'smooth',
-  });
-}
-//============= intersection observer ================
+//   window.scrollBy({
+//     top: cardHeight * 2,
+//     behavior: 'smooth',
+//   });
+// }
+//=============== intersection observer ================
 const onEntry = (entries, io) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -266,9 +275,10 @@ const onEntry = (entries, io) => {
 };
 const options = {
   rootMargin: '500px',
-  threshold: 0,
+  // threshold: 0,
 };
 const observer = new IntersectionObserver(onEntry, options);
+// observer.observe(refs.sentinel);
 
 //======================= btn up =======================
 const string = '<div id="triangle" class="btn-up btn-up_hide"></div>';
