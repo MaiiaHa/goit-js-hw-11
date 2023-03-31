@@ -150,13 +150,7 @@ async function onSubmitForm(e) {
       return Notiflix.Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
-    }
-    // else if (totalHits < itemPerPage) {
-    //   Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
-    //   refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
-    //   // refs.btnLoadMore.style.display = 'none';
-    // }
-    else {
+    } else {
       Notiflix.Notify.info(`Hooray! We found ${totalHits} images.`);
     }
 
@@ -180,12 +174,9 @@ async function onSubmitForm(e) {
 }
 
 async function onLoadMorePictures() {
-  searchInput = refs.form.searchQuery.value;
   currentPage += 1;
-  console.log(totalHits, itemPerPage, currentPage); //3 40 2
 
   if (Math.ceil(totalHits / itemPerPage) < currentPage) {
-    // console.log(Math.ceil(totalHits / itemPerPage) < currentPage);
     // observer.unobserve(refs.sentinel);
 
     Notiflix.Notify.info(
@@ -200,13 +191,9 @@ async function onLoadMorePictures() {
       currentPage,
       itemPerPage
     );
-    // const totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
     // console.log(cardsData); //massive of objects [{},{},{}]
 
-    // if (currentPage >= 2) {
-    //   observer.unobserve(refs.sentinel);
-    // }
     // refs.btnLoadMore.style.display = '';
     // observer.observe(refs.sentinel);
 
