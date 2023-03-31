@@ -109,7 +109,7 @@ refs.form.addEventListener('submit', onSubmitForm);
 
 const itemPerPage = 40;
 let currentPage = null;
-// let totalHits = null;
+let totalHits = null;
 let searchInput = '';
 
 // refs.btnLoadMore.style.display = 'none';
@@ -122,7 +122,7 @@ async function onSubmitForm(e) {
   currentPage = 1;
   // refs.btnLoadMore.style.display = 'none';
 
-  const searchInput = e.currentTarget.elements.searchQuery.value
+  searchInput = e.currentTarget.elements.searchQuery.value
     .trim()
     .split(' ')
     .join('+'); // string 'word+word' format
@@ -140,7 +140,8 @@ async function onSubmitForm(e) {
       currentPage,
       itemPerPage
     );
-    const totalHits = responce.data.totalHits;
+
+    totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
     // console.log(cardsData); //massive of objects [{},{},{}]
     // console.log('~ totalHits:', totalHits);
@@ -165,12 +166,12 @@ async function onSubmitForm(e) {
       );
     }
 
-    // refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
+    refs.form.reset(); // закоментовано оскільки інпут використовується для лоадмор завантаження
 
     createGalleryCard(cardsData);
     // refs.btnLoadMore.style.display = '';
     refs.sentinel.style.display = 'block'; // перешкоджає повторному запиту на АРІ
-    observer.observe(refs.sentinel);
+    // observer.observe(refs.sentinel);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
     Notiflix.Notify.failure('Sorry, somethig was wrong. Please try again.');
@@ -181,6 +182,17 @@ async function onSubmitForm(e) {
 async function onLoadMorePictures() {
   searchInput = refs.form.searchQuery.value;
   currentPage += 1;
+  console.log(totalHits, itemPerPage, currentPage); //3 40 2
+
+  if (Math.ceil(totalHits / itemPerPage) < currentPage) {
+    // console.log(Math.ceil(totalHits / itemPerPage) < currentPage);
+    // observer.unobserve(refs.sentinel);
+
+    Notiflix.Notify.info(
+      "We're sorry, but you've reached the end of search results."
+    );
+    return;
+  }
 
   try {
     const responce = await API.fetchInput(
@@ -188,21 +200,17 @@ async function onLoadMorePictures() {
       currentPage,
       itemPerPage
     );
-    const totalHits = responce.data.totalHits;
+    // const totalHits = responce.data.totalHits;
     const cardsData = responce.data.hits;
     // console.log(cardsData); //massive of objects [{},{},{}]
 
-    createGalleryCard(cardsData);
-
+    // if (currentPage >= 2) {
+    //   observer.unobserve(refs.sentinel);
+    // }
     // refs.btnLoadMore.style.display = '';
-    if (Math.ceil(totalHits / itemPerPage) < currentPage) {
-      Notiflix.Notify.info(
-        "We're sorry, but you've reached the end of search results."
-      );
-      return;
-    }
-    observer.observe(refs.sentinel);
+    // observer.observe(refs.sentinel);
 
+    createGalleryCard(cardsData);
     // console.log(responce.data); // {total: 19417, totalHits: 500, hits: Array(40)}
   } catch (error) {
     Notiflix.Notify.failure(
@@ -265,9 +273,9 @@ function deleteCardContainer() {
 //   });
 // }
 //=============== intersection observer ================
-const onEntry = (entries, io) => {
+const onEntry = entries => {
   entries.forEach(entry => {
-    if (entry.isIntersecting) {
+    if (entry.isIntersecting && searchInput !== '') {
       // console.log('пора грузить ФОТКИ');
       onLoadMorePictures();
     }
@@ -278,7 +286,7 @@ const options = {
   // threshold: 0,
 };
 const observer = new IntersectionObserver(onEntry, options);
-// observer.observe(refs.sentinel);
+observer.observe(refs.sentinel);
 
 //======================= btn up =======================
 const string = '<div id="triangle" class="btn-up btn-up_hide"></div>';
