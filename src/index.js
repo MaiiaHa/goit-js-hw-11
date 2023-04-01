@@ -174,11 +174,11 @@ async function onSubmitForm(e) {
 }
 
 async function onLoadMorePictures() {
+  // if (currentPage){ observer.unobserve(refs.sentinel)}
+
   currentPage += 1;
 
   if (Math.ceil(totalHits / itemPerPage) < currentPage) {
-    // observer.unobserve(refs.sentinel);
-
     Notiflix.Notify.info(
       "We're sorry, but you've reached the end of search results."
     );
@@ -264,6 +264,7 @@ const onEntry = entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting && searchInput !== '') {
       // console.log('пора грузить ФОТКИ');
+      // if (currentPage ===1){return;} else{.... onLoadAdditionalFetch}
       onLoadMorePictures();
     }
   });
